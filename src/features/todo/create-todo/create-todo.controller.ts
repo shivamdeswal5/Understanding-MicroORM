@@ -7,7 +7,7 @@ import { CreateTodoCommand } from './create-todo-command';
 export class CreateTodoController {
   constructor(private readonly handler: CreateTodoHandler) {}
 
-  @Post('create-todo')
+  @Post()
   async create(@Body() dto: CreateTodoDto) {
     const command = new CreateTodoCommand(
       dto.title,

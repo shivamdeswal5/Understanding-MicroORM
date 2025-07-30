@@ -5,7 +5,7 @@ import { DeleteTodoHandler } from './delete.todo.handler';
 export class DeleteTodoController {
   constructor(private readonly handler: DeleteTodoHandler) {}
 
-  @Delete(':uuid/delete-todo')
+  @Delete(':uuid')
   async handle(@Param('uuid') uuid: string) {
     return this.handler.handle(uuid);
   }

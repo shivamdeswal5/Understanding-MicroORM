@@ -5,7 +5,7 @@ import { GetUserHandler } from './get-user.handler';
 export class GetUserController {
   constructor(private readonly handler: GetUserHandler) {}
 
-  @Get(':uuid/get-user')
+  @Get(':uuid')
   async handle(@Param('uuid') uuid: string) {
     return await this.handler.handle(uuid);
   }

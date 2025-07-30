@@ -1,20 +1,14 @@
 openapi: 3.1.1
 info:
   title: Introduction to MicroORM
-  description: |-
-    The purpose of this project is to learn about the use of MicroORM in a NestJS application.
-    It is a basic CRUD application that allows you to create, read, update, and delete users and todos.
-  termsOfService: http://swagger.io/terms/
-  contact:
-    name: CT ventas
-    email: ct.ventas@funiber.org
-  license:
-    name: Apache 2.0
-    url: http://www.apache.org/licenses/LICENSE-2.0.html
   version: 1.0.0
+  description: |
+    This API provides endpoints for managing users and todos using MikroORM.
+    It supports basic CRUD operations with pagination and filtering capabilities.
+
 servers:
-  - url: http://localhost/8080
-    description: Development
+  - url: http://localhost:8080
+    description: Local development server
 
 tags:
   - name: Introduction To MicroORM
@@ -55,7 +49,7 @@ paths:
           description: Search term for first name or email
 
       responses:
-        '200':
+        "200":
           description: A paginated list of users
           content:
             application/json:
@@ -65,7 +59,7 @@ paths:
                   data:
                     type: array
                     items:
-                      $ref: '#/components/schemas/User'
+                      $ref: "#/components/schemas/User"
                   total:
                     type: integer
                     example: 24
@@ -75,25 +69,54 @@ paths:
                   limit:
                     type: integer
                     example: 10
-                  totalPages:
-                    type: integer
-                    example: 3
 
-        '400':
+        "400":
           description: Bad request (invalid query params)
           content:
             application/problem+json:
               schema:
-                $ref: '#/components/schemas/BadRequestResponse'
+                $ref: "#/components/schemas/BadRequestResponse"
 
-        '500':
+        "500":
           description: Internal server error
           content:
             application/problem+json:
               schema:
-                $ref: '#/components/schemas/InternalServerErrorResponse'
+                $ref: "#/components/schemas/InternalServerErrorResponse"
+    post:
+      tags:
+        - Users
+      summary: Create a new user
+      description: Creates a new user with the given information.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateUserRequest"
+      responses:
+        "201":
+          description: User created successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
 
-  /users/{uuid}/get-user:
+        "400":
+          description: Bad request (validation failed)
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/BadRequestResponse"
+
+        "500":
+          description: Internal server error
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/InternalServerErrorResponse"
+
+  /users/{uuid}:
     get:
       tags:
         - Users
@@ -109,69 +132,27 @@ paths:
           description: UUID of the user to retrieve
 
       responses:
-        '200':
+        "200":
           description: User found
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/User'
+                $ref: "#/components/schemas/User"
 
-        '400':
+        "400":
           description: Bad request (invalid UUID format)
           content:
             application/problem+json:
               schema:
-                $ref: '#/components/schemas/BadRequestResponse'
+                $ref: "#/components/schemas/BadRequestResponse"
 
-        '404':
-          description: User not found
-          content:
-            application/problem+json:
-              schema:
-                $ref: '#/components/schemas/NotFoundResponse'
-
-        '500':
+        "500":
           description: Internal server error
           content:
             application/problem+json:
               schema:
-                $ref: '#/components/schemas/InternalServerErrorResponse'
+                $ref: "#/components/schemas/InternalServerErrorResponse"
 
-  /users/create-user:
-    post:
-      tags:
-        - Users
-      summary: Create a new user
-      description: Creates a new user with the given information.
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/CreateUserRequest'
-      responses:
-        '201':
-          description: User created successfully
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/User'
-
-        '400':
-          description: Bad request (validation failed)
-          content:
-            application/problem+json:
-              schema:
-                $ref: '#/components/schemas/BadRequestResponse'
-
-        '500':
-          description: Internal server error
-          content:
-            application/problem+json:
-              schema:
-                $ref: '#/components/schemas/InternalServerErrorResponse'
-
-  /users/{uuid}/update-user:
     put:
       tags:
         - Users
@@ -190,37 +171,29 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/UpdateUser'
+              $ref: "#/components/schemas/UpdateUser"
       responses:
-        '200':
+        "200":
           description: User updated successfully
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/User'
+                $ref: "#/components/schemas/User"
 
-        '400':
+        "400":
           description: Bad Request (invalid body or params)
           content:
             application/problem+json:
               schema:
-                $ref: '#/components/schemas/BadRequestResponse'
+                $ref: "#/components/schemas/BadRequestResponse"
 
-        '404':
-          description: User not found
-          content:
-            application/problem+json:
-              schema:
-                $ref: '#/components/schemas/NotFoundResponse'
-
-        '500':
+        "500":
           description: Internal server error
           content:
             application/problem+json:
               schema:
-                $ref: '#/components/schemas/InternalServerErrorResponse'
+                $ref: "#/components/schemas/InternalServerErrorResponse"
 
-  /users/{uuid}/delete-user:
     delete:
       tags:
         - Users
@@ -235,30 +208,25 @@ paths:
             format: uuid
           description: UUID of the user to delete
       responses:
-        '200':
+        "200":
           description: User deleted successfully
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/DeleteUserResponse'
-        '400':
+                $ref: "#/components/schemas/DeleteUserResponse"
+        "400":
           description: Bad request (invalid UUID format)
           content:
             application/problem+json:
               schema:
-                $ref: '#/components/schemas/ErrorResponse'
-        '404':
-          description: User not found
-          content:
-            application/problem+json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-        '500':
+                $ref: "#/components/schemas/ErrorResponse"
+
+        "500":
           description: Internal server error
           content:
             application/problem+json:
               schema:
-                $ref: '#/components/schemas/InternalServerErrorResponse'
+                $ref: "#/components/schemas/InternalServerErrorResponse"
 
   /todos:
     get:
@@ -301,7 +269,7 @@ paths:
           description: Filter by completion status
 
       responses:
-        '200':
+        "200":
           description: A paginated list of todos
           content:
             application/json:
@@ -311,38 +279,30 @@ paths:
                   data:
                     type: array
                     items:
-                      $ref: '#/components/schemas/Todo'
-                  meta:
-                    type: object
-                    properties:
-                      total:
-                        type: integer
-                        example: 15
-                      page:
-                        type: integer
-                        example: 1
-                      limit:
-                        type: integer
-                        example: 3
-                      totalPages:
-                        type: integer
-                        example: 5
-
-        '400':
+                      $ref: "#/components/schemas/Todo"
+                  total:
+                    type: integer
+                    example: 24
+                  page:
+                    type: integer
+                    example: 1
+                  limit:
+                    type: integer
+                    example: 10
+        "400":
           description: Bad request (invalid query params)
           content:
             application/problem+json:
               schema:
-                $ref: '#/components/schemas/ErrorResponse'
+                $ref: "#/components/schemas/ErrorResponse"
 
-        '500':
+        "500":
           description: Internal server error
           content:
             application/problem+json:
               schema:
-                $ref: '#/components/schemas/InternalServerErrorResponse'
+                $ref: "#/components/schemas/InternalServerErrorResponse"
 
-  /todos/create-todo:
     post:
       summary: Create a new Todo
       tags:
@@ -352,28 +312,28 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/CreateTodoRequest'
+              $ref: "#/components/schemas/CreateTodoRequest"
       responses:
-        '201':
+        "201":
           description: Todo created successfully
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Todo'
-        '400':
+                $ref: "#/components/schemas/Todo"
+        "400":
           description: Bad Request
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorResponse'
-        '500':
+                $ref: "#/components/schemas/ErrorResponse"
+        "500":
           description: Internal Server Error
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/InternalServerErrorResponse'
+                $ref: "#/components/schemas/InternalServerErrorResponse"
 
-  /todos/{uuid}/update-todo:
+  /todos/{uuid}:
     put:
       summary: Update a Todo
       description: Updates an existing todo by UUID. Allows partial updates of fields.
@@ -392,34 +352,28 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/UpdateTodoRequest'
+              $ref: "#/components/schemas/UpdateTodoRequest"
       responses:
-        '200':
+        "200":
           description: Todo updated successfully
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Todo'
-        '400':
+                $ref: "#/components/schemas/Todo"
+        "400":
           description: Bad Request
           content:
             application/problem+json:
               schema:
-                $ref: '#/components/schemas/ErrorResponse'
-        '404':
-          description: Todo not found
-          content:
-            application/problem+json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-        '500':
+                $ref: "#/components/schemas/ErrorResponse"
+       
+        "500":
           description: Internal Server Error
           content:
             application/problem+json:
               schema:
-                $ref: '#/components/schemas/InternalServerErrorResponse'
+                $ref: "#/components/schemas/InternalServerErrorResponse"
 
-  /todos/{uuid}/delete-todo:
     delete:
       summary: Delete a Todo
       description: Deletes a todo by its UUID.
@@ -434,35 +388,30 @@ paths:
             format: uuid
           description: UUID of the todo to delete
       responses:
-        '200':
+        "200":
           description: Todo deleted successfully
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/DeleteTodoResponse'
-        '400':
+                $ref: "#/components/schemas/DeleteTodoResponse"
+        "400":
           description: Bad Request (invalid UUID format)
           content:
             application/problem+json:
               schema:
-                $ref: '#/components/schemas/ErrorResponse'
-        '404':
-          description: Todo not found
-          content:
-            application/problem+json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-        '500':
+                $ref: "#/components/schemas/ErrorResponse"
+ 
+        "500":
           description: Internal Server Error
           content:
             application/problem+json:
               schema:
-                $ref: '#/components/schemas/InternalServerErrorResponse'
+                $ref: "#/components/schemas/InternalServerErrorResponse"
 
   /todos/{uuid}/mark-complete:
-    put:
+    patch:
       summary: Mark a Todo as Completed
-      description: Updates a todo’s `completed` status to `true` and returns the updated todo.
+      description: Marks the given todo as completed. If it was already completed, a message will reflect that.
       tags:
         - Todos
       parameters:
@@ -474,33 +423,29 @@ paths:
             format: uuid
           description: UUID of the todo to mark as complete
       responses:
-        '200':
-          description: Todo marked as complete successfully
+        "200":
+          description: Success message and the current state of the todo
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Todo'
-        '400':
-          description: Bad Request (invalid UUID format)
+                $ref: "#/components/schemas/MarkTodoCompleteResponse"
+        "400":
+          description: Bad Request (e.g. invalid UUID)
           content:
             application/problem+json:
               schema:
-                $ref: '#/components/schemas/ErrorResponse'
-        '404':
-          description: Todo not found
-          content:
-            application/problem+json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-        '500':
+                $ref: "#/components/schemas/ErrorResponse"
+
+        "500":
           description: Internal Server Error
           content:
             application/problem+json:
               schema:
-                $ref: '#/components/schemas/InternalServerErrorResponse'
+                $ref: "#/components/schemas/InternalServerErrorResponse"
+
 
   /todos/{uuid}/mark-incomplete:
-    put:
+    patch:
       summary: Mark a Todo as Incomplete
       description: Updates a todo’s `completed` status to `false` and returns the updated todo.
       tags:
@@ -514,35 +459,29 @@ paths:
             format: uuid
           description: UUID of the todo to mark as incomplete
       responses:
-        '200':
-          description: Todo marked as incomplete successfully
+        "200":
+          description: Success message and the current state of the todo
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Todo'
-        '400':
-          description: Bad Request (invalid UUID format)
+                $ref: "#/components/schemas/MarkTodoCompleteResponse"
+        "400":
+          description: Bad Request (e.g. invalid UUID)
           content:
             application/problem+json:
               schema:
-                $ref: '#/components/schemas/ErrorResponse'
-        '404':
-          description: Todo not found
-          content:
-            application/problem+json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-        '500':
+                $ref: "#/components/schemas/ErrorResponse"
+
+        "500":
           description: Internal Server Error
           content:
             application/problem+json:
               schema:
-                $ref: '#/components/schemas/InternalServerErrorResponse'
+                $ref: "#/components/schemas/InternalServerErrorResponse"
 
 components:
   schemas:
     User:
-
       type: object
       properties:
         id:
@@ -570,7 +509,7 @@ components:
           type: string
           format: date-time
           example: 2025-07-30T06:08:04.162Z
-    
+
     CreateUserRequest:
       type: object
       required:
@@ -598,10 +537,6 @@ components:
         last_name:
           type: string
           example: Deswal
-        email:
-          type: string
-          format: email
-          example: shivam@gmail.com
       additionalProperties: false
 
     DeleteUserResponse:
@@ -612,29 +547,29 @@ components:
           example: User deleted successfully
 
     Todo:
-          type: object
-          properties:
-            uuid:
-              type: string
-              format: uuid
-              example: "d8f0c4a3-0a47-4c60-b62f-9a963f3a8bd4"
-            title:
-              type: string
-              example: "Learn MikroORM"
-            description:
-              type: string
-              example: "Understand how to use MikroORM in a NestJS project"
-            completed:
-              type: boolean
-              example: false
-            created_at:
-              type: string
-              format: date-time
-              example: "2025-07-28T14:30:00Z"
-            updated_at:
-              type: string
-              format: date-time
-              example: "2025-07-29T09:00:00Z"
+      type: object
+      properties:
+        uuid:
+          type: string
+          format: uuid
+          example: "d8f0c4a3-0a47-4c60-b62f-9a963f3a8bd4"
+        title:
+          type: string
+          example: "Learn MikroORM"
+        description:
+          type: string
+          example: "Understand how to use MikroORM in a NestJS project"
+        completed:
+          type: boolean
+          example: false
+        created_at:
+          type: string
+          format: date-time
+          example: "2025-07-28T14:30:00Z"
+        updated_at:
+          type: string
+          format: date-time
+          example: "2025-07-29T09:00:00Z"
 
     CreateTodoRequest:
       type: object
@@ -666,6 +601,53 @@ components:
           type: boolean
           example: true
 
+    MarkTodoCompleteResponse:
+      type: object
+      properties:
+        message:
+          type: string
+          example: Todo was already marked as completed.
+        todo:
+          type: object
+          properties:
+            uuid:
+              type: string
+              format: uuid
+              example: 10f91dca-7240-44cc-b211-21ffb25efec3
+            title:
+              type: string
+              example: TypeOrm34
+            description:
+              type: string
+              example: Random Todo Description
+            completed:
+              type: boolean
+              example: true
+
+    MarkTodoIncompleteResponse:
+        type: object
+        properties:
+          message:
+            type: string
+            example: Todo was already marked as Incompleted.
+          todo:
+            type: object
+            properties:
+              uuid:
+                type: string
+                format: uuid
+                example: 10f91dca-7240-44cc-b211-21ffb25efec3
+              title:
+                type: string
+                example: TypeOrm34
+              description:
+                type: string
+                example: Random Todo Description
+              completed:
+                type: boolean
+                example: true
+
+
     DeleteTodoResponse:
       type: object
       properties:
@@ -689,29 +671,18 @@ components:
 
     BadRequestResponse:
       allOf:
-        - $ref: '#/components/schemas/ErrorResponse'
+        - $ref: "#/components/schemas/ErrorResponse"
         - type: object
           example:
             type: /problem/bad-request
             title: Bad Request
-            detail: Invalid query parameter `page`
+            detail: Invalid query parameter
             instance: /users
             status: 400
 
-    NotFoundResponse:
-      allOf:
-        - $ref: '#/components/schemas/ErrorResponse'
-        - type: object
-          example:
-            type: /problem/not-found
-            title: Not Found
-            detail: User with given UUID not found
-            instance: /users/uuid/get-user
-            status: 404
-
     InternalServerErrorResponse:
       allOf:
-        - $ref: '#/components/schemas/ErrorResponse'
+        - $ref: "#/components/schemas/ErrorResponse"
         - type: object
           example:
             type: /problem/internal-server-error

@@ -32,7 +32,6 @@ export class ListUsersHandler {
       total,
       page,
       limit,
-      totalPages: Math.ceil(total / limit),
     };
   }
 }

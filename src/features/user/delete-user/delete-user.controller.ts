@@ -5,7 +5,7 @@ import { DeleteUserHandler } from './delete-user.handler';
 export class DeleteUserController {
   constructor(private readonly handler: DeleteUserHandler) {}
 
-  @Delete(':uuid/delete-user')
+  @Delete(':uuid')
   async handle(@Param('uuid') uuid: string) {
     return this.handler.handle(uuid);
   }

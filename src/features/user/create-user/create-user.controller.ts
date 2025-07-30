@@ -3,7 +3,7 @@ import { CreateUserHandler } from './create-user.handler';
 import { CreateUserDto } from './create-user.dto';
 import { CreateUserCommand } from './create-user.command';
 
-@Controller('users/create-user')
+@Controller('users')
 export class CreateUserController {
   constructor(private readonly handler: CreateUserHandler) {}
 

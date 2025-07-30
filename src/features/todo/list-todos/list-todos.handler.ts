@@ -34,7 +34,6 @@ export class ListTodosHandler {
         total,
         page,
         limit,
-        totalPages: Math.ceil(total / limit),
       },
     };
   }
