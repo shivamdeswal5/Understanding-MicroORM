@@ -1,7 +1,7 @@
 import { EntityManager, EntityRepository } from '@mikro-orm/core';
 import { InjectRepository } from '@mikro-orm/nestjs';
 import { Injectable } from '@nestjs/common';
-import { User } from 'src/domain/user/user.entity';
+import { User } from '../../../domain/user/user.entity';
 
 @Injectable()
 export class UserRepository {

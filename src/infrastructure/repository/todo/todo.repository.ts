@@ -1,8 +1,8 @@
 import { EntityManager, EntityRepository, FilterQuery } from '@mikro-orm/core';
 import { InjectRepository } from '@mikro-orm/nestjs';
 import { Injectable } from '@nestjs/common';
-import { Todo } from 'src/domain/todo/todo.entity';
-import { User } from 'src/domain/user/user.entity';
+import { Todo } from '../../../domain/todo/todo.entity';
+import { User } from '../../../domain/user/user.entity';
 
 @Injectable()
 export class TodoRepository {

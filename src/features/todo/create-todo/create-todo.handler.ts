@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { TodoRepository } from 'src/infrastructure/repository/todo/todo.repository';
-import { UserRepository } from 'src/infrastructure/repository/user/user.repository';
+import { TodoRepository } from '../../../infrastructure/repository/todo/todo.repository';
+import { UserRepository } from '../../../infrastructure/repository/user/user.repository';
 import { CreateTodoCommand } from './create-todo-command';
 
 @Injectable()

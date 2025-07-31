@@ -1,14 +1,12 @@
-
 import { Entity, PrimaryKey, Property, OneToMany, Collection } from '@mikro-orm/core';
 import { Todo } from '../todo/todo.entity';
-import { v4 as uuidv4 } from 'uuid';
 
 @Entity({ tableName: 'users' }) 
 export class User {
     @PrimaryKey()
     id: number;
 
-    @Property({ type: 'uuid', unique: true, onCreate: () => uuidv4()})
+    @Property({ type: 'uuid', unique: true,defaultRaw: 'uuid_generate_v4()' })
     uuid: string;
 
     @Property()

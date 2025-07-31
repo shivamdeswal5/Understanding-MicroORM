@@ -1,7 +1,10 @@
 # Migration Commands
-1. Create Migration
-    docker exec -it mikro-orm-crud npm run migration:create InitialMigration
+    docker exec -it mikro-orm-crud sh
+    npm run migration:up
+    npm run migration:down
 
-// "migration:create": "npm run mikro-orm -- migration:create --config ./dist/infrastructure/database/config/mikro-orm.config.ts"
+# Run Test Case
+    npm run test
 
-docker exec -it mikro-orm-crud npx mikro-orm migration:up --config dist/src/infrastructure/database/config/mikro-orm.config.js
+# Run Single Test Case
+    npx jest test/unit/user/create-user/create-user.handler.spec.ts
