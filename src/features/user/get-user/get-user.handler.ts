@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { EntityManager } from '@mikro-orm/core';
-import { User } from '../../../../src/domain/user/user.entity';
+import { User } from '../../../domain/user/user.entity';
 
 @Injectable()
 export class GetUserHandler {

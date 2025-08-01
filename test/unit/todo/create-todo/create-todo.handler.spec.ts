@@ -36,22 +36,22 @@ describe('Test case for CreateTodoHandler', () => {
     todoRepository = module.get(TodoRepository);
   });
 
-  it('should create a todo when user exists', async () => {
+  it('should return success message when todo is created and user exists', async () => {
     const user = UserMother.validUser();
-    const todo = TodoMother.validTodo({ user });
-
+    const todoData = TodoMother.validCreateCommandData({ user_uuid: user.uuid });
+  
     const command = new CreateTodoCommand(
-      todo.title,
-      todo.description,
-      user.uuid,
-      todo.completed,
+      todoData.title,
+      todoData.description,
+      todoData.user_uuid,
+      todoData.completed,
     );
-
+  
     userRepository.findOneByUuid.mockResolvedValue(user);
-    todoRepository.createTodo.mockResolvedValue(todo);
-
+    todoRepository.createTodo.mockResolvedValue(TodoMother.validTodo({ user })); 
+  
     const result = await handler.handle(command);
-
+  
     expect(userRepository.findOneByUuid).toHaveBeenCalledWith(user.uuid);
     expect(todoRepository.createTodo).toHaveBeenCalledWith({
       title: command.title,
@@ -59,12 +59,12 @@ describe('Test case for CreateTodoHandler', () => {
       completed: command.completed,
       user,
     });
-
-    expect(result).toEqual(todo);
+  
+    expect(result).toEqual({ message: 'Todo created successfully' });
   });
 
   it('should throw NotFoundException when user does not exist', async () => {
-    const command = new CreateTodoCommand('Task', 'Desc', 'non-existent-uuid', false);
+    const command = new CreateTodoCommand('Task', 'Desc','non-existent-uuid',false);
 
     userRepository.findOneByUuid.mockResolvedValue(null);
 

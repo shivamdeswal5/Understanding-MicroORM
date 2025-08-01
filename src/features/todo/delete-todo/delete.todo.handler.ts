@@ -1,5 +1,5 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { TodoRepository } from 'src/infrastructure/repository/todo/todo.repository';
+import { TodoRepository } from '../../../infrastructure/repository/todo/todo.repository';
 
 @Injectable()
 export class DeleteTodoHandler {

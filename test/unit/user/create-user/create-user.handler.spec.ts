@@ -1,3 +1,4 @@
+import { Test } from '@nestjs/testing';
 import { CreateUserHandler } from '../../../../src/features/user/create-user/create-user.handler';
 import { UserRepository } from '../../../../src/infrastructure/repository/user/user.repository';
 import { CreateUserCommand } from '../../../../src/features/user/create-user/create-user.command';
@@ -5,16 +6,25 @@ import { UserMother } from '../user.mother';
 import { Collection } from '@mikro-orm/core';
 import { Todo } from '../../../../src/domain/todo/todo.entity';
 
-describe('Test case for CreateUserHandler', () => {
+describe('Test case for CreateUserHandler (with NestJS TestingModule)', () => {
   let handler: CreateUserHandler;
   let userRepository: jest.Mocked<UserRepository>;
 
-  beforeEach(() => {
-    userRepository = {
-      createUser: jest.fn(),
-    } as unknown as jest.Mocked<UserRepository>;
+  beforeEach(async () => {
+    const moduleRef = await Test.createTestingModule({
+      providers: [
+        CreateUserHandler,
+        {
+          provide: UserRepository,
+          useValue: {
+            createUser: jest.fn(),
+          },
+        },
+      ],
+    }).compile();
 
-    handler = new CreateUserHandler(userRepository);
+    handler = moduleRef.get(CreateUserHandler);
+    userRepository = moduleRef.get(UserRepository);
   });
 
   afterEach(() => {
@@ -33,7 +43,7 @@ describe('Test case for CreateUserHandler', () => {
       ...userData,
       id: 1,
       uuid: 'mock-uuid',
-      todos: new Collection<Todo>([]), 
+      todos: new Collection<Todo>([]),
       created_at: new Date(),
       updated_at: new Date(),
     };

@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { EntityManager } from '@mikro-orm/core';
-import { Todo } from 'src/domain/todo/todo.entity';
+import { Todo } from '../../../domain/todo/todo.entity';
 
 @Injectable()
 export class MarkTodoCompleteHandler {

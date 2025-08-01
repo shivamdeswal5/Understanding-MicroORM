@@ -16,11 +16,14 @@ export class CreateTodoHandler {
     if (!user) {
       throw new NotFoundException(`User with UUID ${user_uuid} not found`);
     }
-    return await this.todoRepository.createTodo({
+    await this.todoRepository.createTodo({
       title: title,
       description: description ?? '',
       completed: completed ?? false,
       user,
     });
+    return{
+      message: 'Todo created successfully',
+    }
   }
 }

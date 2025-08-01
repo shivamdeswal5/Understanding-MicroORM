@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { EntityManager, FilterQuery } from '@mikro-orm/core';
-import { Todo } from 'src/domain/todo/todo.entity';
+import { Todo } from '../../../domain/todo/todo.entity';
 import { ListTodosQuery } from './list-todos.query';
 
 @Injectable()

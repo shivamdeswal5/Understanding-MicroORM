@@ -1,83 +1,91 @@
-import { Test, TestingModule } from '@nestjs/testing';
-import { ListUserController } from '../../../../src/features/user/list-users/list-users.controller';
-import { ListUsersHandler } from '../../../../src/features/user/list-users/list-users.handler';
-import { ListUsersDto } from '../../../../src/features/user/list-users/list-users.dto';
+import { INestApplication, ValidationPipe, HttpStatus } from '@nestjs/common';
+import { HttpAdapterHost } from '@nestjs/core';
+import { Test } from '@nestjs/testing';
+import * as request from 'supertest';
+import { GetUserController } from '../../../../src/features/user/get-user/get-user.controller';
+import { GetUserHandler } from '../../../../src/features/user/get-user/get-user.handler';
 import { Collection } from '@mikro-orm/core';
 import { Todo } from '../../../../src/domain/todo/todo.entity';
+import { AllExceptionsFilter } from '../../../../src/infrastructure/http/exceptions/all-exception-filter';
 
-describe('Test case for ListUserController', () => {
-  let controller: ListUserController;
-  let handler: ListUsersHandler;
+describe('Test case for GetUserController (integration-style)', () => {
+  let app: INestApplication;
+  let handler: jest.Mocked<GetUserHandler>;
 
   beforeEach(async () => {
-    const mockHandler = {
-      handle: jest.fn(),
-    };
-
-    const module: TestingModule = await Test.createTestingModule({
-      controllers: [ListUserController],
+    const moduleRef = await Test.createTestingModule({
+      controllers: [GetUserController],
       providers: [
         {
-          provide: ListUsersHandler,
-          useValue: mockHandler,
+          provide: GetUserHandler,
+          useValue: {
+            handle: jest.fn(),
+          },
         },
       ],
     }).compile();
 
-    controller = module.get(ListUserController);
-    handler = module.get(ListUsersHandler);
+    handler = moduleRef.get(GetUserHandler);
+
+    app = moduleRef.createNestApplication();
+
+    const httpAdapterHost = app.get(HttpAdapterHost);
+    app.useGlobalFilters(new AllExceptionsFilter(httpAdapterHost));
+    app.useGlobalPipes(
+      new ValidationPipe({
+        whitelist: true,
+        forbidNonWhitelisted: true,
+        transform: true,
+      }),
+    );
+
+    await app.init();
   });
 
   afterEach(() => {
     jest.clearAllMocks();
   });
 
-  it('should call ListUsersHandler with DTO and return response', async () => {
-    const dto: ListUsersDto = {
-      page: 1,
-      limit: 10,
-      search: 'test',
-    };
+  afterAll(async () => {
+    await app.close();
+  });
 
-    const expectedResponse = {
-      data: [{
-        uuid: '123',
-        first_name: 'John',
-        last_name: 'Doe',
-        email: 'john@example.com',
+  describe('GET /users/:uuid', () => {
+    it('should return the user for a valid uuid', async () => {
+      const uuid = '9a3b614e-3b9e-4bb5-9a9d-dab539ed5145';
+      const expectedUser = {
+        uuid,
+        first_name: 'Shivam',
+        last_name: 'Deswal',
+        email: 'shivam@gmail.com',
         id: 1,
         todos: new Collection<Todo>([]),
         created_at: new Date(),
         updated_at: new Date(),
-      }],
-      total: 1,
-      page: 1,
-      limit: 10,
-    };
+      };
 
-    jest.spyOn(handler, 'handle').mockResolvedValue(expectedResponse);
+      handler.handle.mockResolvedValue(expectedUser);
 
-    const result = await controller.listUsers(dto);
+      const res = await request(app.getHttpServer())
+        .get(`/users/${uuid}`)
+        .expect(HttpStatus.OK);
 
-    expect(handler.handle).toHaveBeenCalledWith(expect.objectContaining(dto));
-    expect(result).toEqual(expectedResponse);
-  });
+      expect(res.body).toMatchObject({
+        uuid,
+        first_name: 'Shivam',
+        last_name: 'Deswal',
+        email: 'shivam@gmail.com',
+        id: 1,
+      });
+      expect(handler.handle).toHaveBeenCalledWith(uuid);
+    });
 
-  it('should default to empty response if no search', async () => {
-    const dto: ListUsersDto = { page: 1, limit: 5 };
+    it('should return 400 for invalid UUID', async () => {
+      await request(app.getHttpServer())
+        .get('/users/invalid-uuid')
+        .expect(HttpStatus.BAD_REQUEST);
 
-    const expectedResponse = {
-      data: [],
-      total: 0,
-      page: 1,
-      limit: 5,
-    };
-
-    jest.spyOn(handler, 'handle').mockResolvedValue(expectedResponse);
-
-    const result = await controller.listUsers(dto);
-
-    expect(handler.handle).toHaveBeenCalledWith(expect.objectContaining(dto));
-    expect(result).toEqual(expectedResponse);
+      expect(handler.handle).not.toHaveBeenCalled();
+    });
   });
 });
