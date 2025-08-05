@@ -9,13 +9,16 @@ export class CreateUsersMigration20250729102553 extends Migration {
     this.addSql(`
       CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
     `);
+
     this.addSql(`
       CREATE TABLE "${schema}"."users" (
         "id"            SERIAL       PRIMARY KEY,
         "uuid"          UUID         DEFAULT uuid_generate_v4() NOT NULL,
-        "first_name"    VARCHAR,
-        "last_name"     VARCHAR,
-        "email"         VARCHAR      UNIQUE,
+        "first_name"    VARCHAR      NOT NULL,
+        "last_name"     VARCHAR      NOT NULL,
+        "email"         VARCHAR      UNIQUE NOT NULL,
+        "password"      VARCHAR      NOT NULL,
+        "role"          VARCHAR      NOT NULL CHECK ("role" IN ('owner', 'passenger')),
         "created_at"    TIMESTAMP    NOT NULL DEFAULT now(),
         "updated_at"    TIMESTAMP    NOT NULL DEFAULT now(),
         CONSTRAINT "users_uuid_unique" UNIQUE ("uuid")

@@ -1,4 +1,4 @@
-import { Controller, Put, Param, Body, NotFoundException, ParseUUIDPipe } from '@nestjs/common';
+import { Controller, Param, Body, ParseUUIDPipe, Patch } from '@nestjs/common';
 import { UpdateUserHandler } from './update-user.handler';
 import { UpdateUserDto } from './update-user.dto';
 
@@ -6,7 +6,7 @@ import { UpdateUserDto } from './update-user.dto';
 export class UpdateUserController {
   constructor(private readonly handler: UpdateUserHandler) {}
 
-  @Put(':uuid')
+  @Patch(':uuid')
   async handle(@Param('uuid', ParseUUIDPipe) uuid: string, @Body() dto: UpdateUserDto) {
     return await this.handler.handle(uuid, dto);
   }

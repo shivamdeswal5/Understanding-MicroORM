@@ -3,27 +3,33 @@ import { Todo } from '../todo/todo.entity';
 
 @Entity({ tableName: 'users' }) 
 export class User {
-    @PrimaryKey()
-    id: number;
+  @PrimaryKey()
+  id: number;
 
-    @Property({ type: 'uuid', unique: true,defaultRaw: 'uuid_generate_v4()' })
-    uuid: string;
+  @Property({ type: 'uuid', unique: true, defaultRaw: 'uuid_generate_v4()' })
+  uuid: string;
 
-    @Property()
-    first_name: string;
+  @Property()
+  first_name: string;
 
-    @Property()
-    last_name: string;
+  @Property()
+  last_name: string;
 
-    @Property({ unique: true })
-    email: string;
+  @Property({ unique: true })
+  email: string;
 
-    @OneToMany(() => Todo, todo => todo.user)
-    todos = new Collection<Todo>(this);
+  @Property()
+  password: string;
 
-    @Property({ onCreate: () => new Date() })
-    created_at: Date = new Date();
+  @Property()
+  role: 'owner' | 'passenger';
 
-    @Property({ onUpdate: () => new Date() })
-    updated_at: Date = new Date();
+  @OneToMany(() => Todo, todo => todo.user)
+  todos = new Collection<Todo>(this);
+
+  @Property({ onCreate: () => new Date() })
+  created_at: Date = new Date();
+
+  @Property({ onUpdate: () => new Date() })
+  updated_at: Date = new Date();
 }

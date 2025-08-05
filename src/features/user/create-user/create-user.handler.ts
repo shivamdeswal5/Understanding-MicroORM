@@ -7,10 +7,18 @@ export class CreateUserHandler {
   constructor(private readonly userRepository: UserRepository) {}
 
   async handle(command: CreateUserCommand) {
-    const { first_name, last_name, email } = command;
-    await this.userRepository.createUser({ first_name, last_name, email });
+    const { first_name, last_name, email, password, role } = command;
+
+    await this.userRepository.createUser({
+      first_name,
+      last_name,
+      email,
+      password,
+      role,
+    });
+
     return {
-      message: 'User created successfully'
+      message: 'User created successfully',
     };
   }
 }

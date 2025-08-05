@@ -9,7 +9,13 @@ export class CreateUserController {
 
   @Post()
   async createUser(@Body() dto: CreateUserDto) {
-    const command = new CreateUserCommand(dto.first_name, dto.last_name,dto.email);
+    const command = new CreateUserCommand(
+      dto.first_name,
+      dto.last_name,
+      dto.email,
+      dto.password,
+      dto.role,
+    );
     return await this.handler.handle(command);
   }
 }
